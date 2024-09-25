@@ -2,6 +2,7 @@ package com.coupongenerator.admin.services;
 
 import com.coupongenerator.admin.dtos.CreatePlanRequestDto;
 import com.coupongenerator.admin.dtos.PlanResponseDto;
+import com.coupongenerator.admin.dtos.UpdatePlanRequestDto;
 import com.coupongenerator.admin.entities.PlanDetails;
 import com.coupongenerator.admin.exceptions.PlanAlreadyExistsException;
 import com.coupongenerator.admin.exceptions.PlanNotFoundException;
@@ -9,10 +10,7 @@ import com.coupongenerator.admin.repositories.PlanDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PlanDetailsService {
@@ -61,6 +59,35 @@ public class PlanDetailsService {
         }
 
         PlanDetails planDetails = optionalPlanDetails.get();
+
+        return PlanResponseDto.fromPlanDetailsEntity(planDetails);
+    }
+
+    public PlanResponseDto updatePlan(UUID id, UpdatePlanRequestDto requestDto) throws PlanNotFoundException {
+        Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findById(id);
+
+        if(optionalPlanDetails.isEmpty()) {
+            throw new PlanNotFoundException("Plan not found with plan id:" + id);
+        }
+
+        PlanDetails planDetails = optionalPlanDetails.get();
+
+        if(requestDto.getPlanName() != null && !requestDto.getPlanName().isEmpty()) {
+            planDetails.setPlanName(requestDto.getPlanName());
+        }
+
+        if(requestDto.getAmount() != null) {
+            planDetails.setAmount(requestDto.getAmount());
+        }
+
+        if(requestDto.getMonths() != null) {
+            planDetails.setMonths(requestDto.getMonths());
+        }
+
+        Date currentDate = new Date();
+        planDetails.setModifiedAt(currentDate);
+
+        planDetailsRepository.save(planDetails);
 
         return PlanResponseDto.fromPlanDetailsEntity(planDetails);
     }

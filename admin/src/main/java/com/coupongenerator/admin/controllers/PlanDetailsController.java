@@ -2,6 +2,7 @@ package com.coupongenerator.admin.controllers;
 
 import com.coupongenerator.admin.dtos.CreatePlanRequestDto;
 import com.coupongenerator.admin.dtos.PlanResponseDto;
+import com.coupongenerator.admin.dtos.UpdatePlanRequestDto;
 import com.coupongenerator.admin.exceptions.PlanAlreadyExistsException;
 import com.coupongenerator.admin.exceptions.PlanNotFoundException;
 import com.coupongenerator.admin.services.PlanDetailsService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/plan")
@@ -41,5 +43,14 @@ public class PlanDetailsController {
     ) throws PlanNotFoundException {
         PlanResponseDto responseDto = planDetailsService.getPlan(planName);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updatePlan(
+            @PathVariable UUID id,
+            @RequestBody UpdatePlanRequestDto requestDto
+    ) throws PlanNotFoundException {
+        PlanResponseDto responseDto = planDetailsService.updatePlan(id, requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseDto);
     }
 }
