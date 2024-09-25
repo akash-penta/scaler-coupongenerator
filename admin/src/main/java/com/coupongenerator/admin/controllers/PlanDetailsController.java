@@ -50,7 +50,7 @@ public class PlanDetailsController {
             @PathVariable UUID id,
             @RequestBody UpdatePlanRequestDto requestDto
     ) throws PlanNotFoundException {
-        PlanResponseDto responseDto = planDetailsService.updatePlan(id, requestDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseDto);
+        planDetailsService.updatePlan(id, requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 }

@@ -63,7 +63,7 @@ public class PlanDetailsService {
         return PlanResponseDto.fromPlanDetailsEntity(planDetails);
     }
 
-    public PlanResponseDto updatePlan(UUID id, UpdatePlanRequestDto requestDto) throws PlanNotFoundException {
+    public void updatePlan(UUID id, UpdatePlanRequestDto requestDto) throws PlanNotFoundException {
         Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findById(id);
 
         if(optionalPlanDetails.isEmpty()) {
@@ -88,7 +88,5 @@ public class PlanDetailsService {
         planDetails.setModifiedAt(currentDate);
 
         planDetailsRepository.save(planDetails);
-
-        return PlanResponseDto.fromPlanDetailsEntity(planDetails);
     }
 }
