@@ -2,6 +2,7 @@ package com.coupongenerator.admin.controllers;
 
 import com.coupongenerator.admin.dtos.CreatePlanRequestDto;
 import com.coupongenerator.admin.dtos.CreatePlanResponseDto;
+import com.coupongenerator.admin.exceptions.PlanAlreadyExistsException;
 import com.coupongenerator.admin.services.PlanDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class PlanDetailsController {
     @PostMapping
     public ResponseEntity<?> createPlan(
             @RequestBody CreatePlanRequestDto requestDto
-    ) {
+    ) throws PlanAlreadyExistsException {
 
         CreatePlanResponseDto responseDto = planDetailsService.createPlan(requestDto);
 
