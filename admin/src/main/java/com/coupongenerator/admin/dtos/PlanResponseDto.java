@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatePlanResponseDto {
+public class PlanResponseDto {
     private UUID id;
     private Date createdAt;
     private Date modifiedAt;
@@ -19,8 +19,8 @@ public class CreatePlanResponseDto {
     private int amount;
     private int months;
 
-    public static CreatePlanResponseDto fromPlanDetailsEntity(PlanDetails planDetails) {
-        return new CreatePlanResponseDto(
+    public static PlanResponseDto fromPlanDetailsEntity(PlanDetails planDetails) {
+        return new PlanResponseDto(
                 planDetails.getId(),
                 planDetails.getCreatedAt(),
                 planDetails.getModifiedAt(),
