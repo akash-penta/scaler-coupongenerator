@@ -4,6 +4,7 @@ import com.coupongenerator.admin.dtos.CreatePlanRequestDto;
 import com.coupongenerator.admin.dtos.PlanResponseDto;
 import com.coupongenerator.admin.entities.PlanDetails;
 import com.coupongenerator.admin.exceptions.PlanAlreadyExistsException;
+import com.coupongenerator.admin.exceptions.PlanNotFoundException;
 import com.coupongenerator.admin.repositories.PlanDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,17 @@ public class PlanDetailsService {
         planDetailsList.forEach(planDetails -> responseDtoList.add(PlanResponseDto.fromPlanDetailsEntity(planDetails)));
 
         return responseDtoList;
+    }
+
+    public PlanResponseDto getPlan(String planName) throws PlanNotFoundException {
+        Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findByPlanName(planName);
+
+        if(optionalPlanDetails.isEmpty()) {
+            throw new PlanNotFoundException("Plan not found with plan name:" + planName);
+        }
+
+        PlanDetails planDetails = optionalPlanDetails.get();
+
+        return PlanResponseDto.fromPlanDetailsEntity(planDetails);
     }
 }

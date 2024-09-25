@@ -3,6 +3,7 @@ package com.coupongenerator.admin.controllers;
 import com.coupongenerator.admin.dtos.CreatePlanRequestDto;
 import com.coupongenerator.admin.dtos.PlanResponseDto;
 import com.coupongenerator.admin.exceptions.PlanAlreadyExistsException;
+import com.coupongenerator.admin.exceptions.PlanNotFoundException;
 import com.coupongenerator.admin.services.PlanDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,5 +33,13 @@ public class PlanDetailsController {
     public ResponseEntity<?> getAllPlans() {
         List<PlanResponseDto> responseDtoList = planDetailsService.getAllPlans();
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
+    }
+
+    @GetMapping("/{planName}")
+    public ResponseEntity<?> getPlan(
+            @PathVariable String planName
+    ) throws PlanNotFoundException {
+        PlanResponseDto responseDto = planDetailsService.getPlan(planName);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }
