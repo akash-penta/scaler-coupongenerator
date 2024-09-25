@@ -89,4 +89,14 @@ public class PlanDetailsService {
 
         planDetailsRepository.save(planDetails);
     }
+
+    public void deletePlan(UUID id) throws PlanNotFoundException {
+        Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findById(id);
+
+        if(optionalPlanDetails.isEmpty()) {
+            throw new PlanNotFoundException("Plan not found with plan id:" + id);
+        }
+
+        planDetailsRepository.deleteById(id);
+    }
 }

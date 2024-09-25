@@ -53,4 +53,12 @@ public class PlanDetailsController {
         planDetailsService.updatePlan(id, requestDto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePlan(
+            @PathVariable UUID id
+    ) throws PlanNotFoundException {
+        planDetailsService.deletePlan(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+    }
 }
