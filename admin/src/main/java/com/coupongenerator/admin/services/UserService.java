@@ -11,9 +11,7 @@ import com.coupongenerator.admin.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -56,5 +54,15 @@ public class UserService {
         userRepository.save(user);
 
         return UserResponseDto.fromUserEntity(user);
+    }
+
+    public List<UserResponseDto> getAllUsers() {
+        List<User> userList = userRepository.findAll();
+
+        List<UserResponseDto> responseDtoList = new ArrayList<>();
+
+        userList.forEach(user -> responseDtoList.add(UserResponseDto.fromUserEntity(user)));
+
+        return responseDtoList;
     }
 }
