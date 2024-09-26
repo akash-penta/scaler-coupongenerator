@@ -4,6 +4,7 @@ import com.coupongenerator.admin.dtos.CreateUserRequestDto;
 import com.coupongenerator.admin.dtos.UserResponseDto;
 import com.coupongenerator.admin.exceptions.PlanNotFoundException;
 import com.coupongenerator.admin.exceptions.UserAlreadyExistsException;
+import com.coupongenerator.admin.exceptions.UserNotFoundException;
 import com.coupongenerator.admin.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,14 @@ public class UserController {
         List<UserResponseDto> responseDtoList = userService.getAllUsers();
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
+    }
+
+    @GetMapping("/{userName}")
+    public ResponseEntity<?> getUser(
+            @PathVariable String userName
+    ) throws UserNotFoundException {
+        UserResponseDto responseDto = userService.getUser(userName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }

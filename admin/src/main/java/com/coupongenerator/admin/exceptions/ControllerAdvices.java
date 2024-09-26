@@ -31,4 +31,12 @@ public class ControllerAdvices {
                 HttpStatus.CONFLICT
         );
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionDto> handleUserNotFoundException(UserNotFoundException userNotFoundException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.NOT_FOUND.value(), userNotFoundException.getMessage()),
+                HttpStatus.NOT_FOUND
+        );
+    }
 }

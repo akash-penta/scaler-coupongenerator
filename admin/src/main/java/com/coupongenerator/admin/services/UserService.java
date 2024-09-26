@@ -7,6 +7,7 @@ import com.coupongenerator.admin.entities.User;
 import com.coupongenerator.admin.enums.UserStatus;
 import com.coupongenerator.admin.exceptions.PlanNotFoundException;
 import com.coupongenerator.admin.exceptions.UserAlreadyExistsException;
+import com.coupongenerator.admin.exceptions.UserNotFoundException;
 import com.coupongenerator.admin.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,5 +65,17 @@ public class UserService {
         userList.forEach(user -> responseDtoList.add(UserResponseDto.fromUserEntity(user)));
 
         return responseDtoList;
+    }
+
+    public UserResponseDto getUser(String userName) throws UserNotFoundException {
+        Optional<User> optionalUser = userRepository.findByUserName(userName);
+
+        if(optionalUser.isEmpty()) {
+            throw new UserNotFoundException("User not found with user name: " + userName);
+        }
+
+        User user = optionalUser.get();
+
+        return UserResponseDto.fromUserEntity(user);
     }
 }
