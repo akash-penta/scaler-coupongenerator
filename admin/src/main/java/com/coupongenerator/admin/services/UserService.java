@@ -1,6 +1,7 @@
 package com.coupongenerator.admin.services;
 
 import com.coupongenerator.admin.dtos.CreateUserRequestDto;
+import com.coupongenerator.admin.dtos.UpdateUserRequestDto;
 import com.coupongenerator.admin.dtos.UserResponseDto;
 import com.coupongenerator.admin.entities.PlanDetails;
 import com.coupongenerator.admin.entities.User;
@@ -77,5 +78,52 @@ public class UserService {
         User user = optionalUser.get();
 
         return UserResponseDto.fromUserEntity(user);
+    }
+
+    public void updateUser(
+            UUID id,
+            UpdateUserRequestDto requestDto
+    ) throws UserNotFoundException, UserAlreadyExistsException, PlanNotFoundException {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isEmpty()) {
+            throw new UserNotFoundException("User not found with id: " + id);
+        }
+
+        User user = optionalUser.get();
+
+        if(requestDto.getUserName() != null && !requestDto.getUserName().isBlank()) {
+            Optional<User> optionalUserWithUserName = userRepository.findByUserName(requestDto.getUserName());
+            if(optionalUserWithUserName.isPresent()) {
+                throw new UserAlreadyExistsException("User already exist with same user name");
+            }
+
+            user.setUserName(requestDto.getUserName());
+        }
+
+        if(requestDto.getBusinessName() != null && !requestDto.getBusinessName().isBlank()) {
+            user.setBusinessName(requestDto.getBusinessName());
+        }
+
+        if(requestDto.getStatus() != null && !requestDto.getStatus().isBlank()) {
+            user.setStatus(UserStatus.valueOf(requestDto.getStatus()));
+        }
+
+        Date currentDate = new Date();
+
+        if(requestDto.getPlanName() != null && !requestDto.getPlanName().isBlank()) {
+            PlanDetails planDetails = planDetailsService.getPlanDetailsObject(requestDto.getPlanName());
+            user.setCurrentPlan(planDetails);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+            calendar.add(Calendar.MONTH, planDetails.getMonths());
+            Date expireDate = calendar.getTime();
+            user.setExpireDate(expireDate);
+        }
+
+        user.setModifiedAt(currentDate);
+
+        userRepository.save(user);
     }
 }

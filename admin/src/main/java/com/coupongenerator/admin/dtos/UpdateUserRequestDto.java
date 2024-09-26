@@ -14,7 +14,7 @@ public class UpdateUserRequestDto {
 
     private String businessName;
 
-    private UserStatus status;
+    private String status;
 
     private String planName;
 }
