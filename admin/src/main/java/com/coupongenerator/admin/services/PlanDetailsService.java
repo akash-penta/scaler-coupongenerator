@@ -63,6 +63,16 @@ public class PlanDetailsService {
         return PlanResponseDto.fromPlanDetailsEntity(planDetails);
     }
 
+    public PlanDetails getPlanDetailsObject(String planName) throws PlanNotFoundException {
+        Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findByPlanName(planName);
+
+        if(optionalPlanDetails.isEmpty()) {
+            throw new PlanNotFoundException("Plan not found with plan name:" + planName);
+        }
+
+        return optionalPlanDetails.get();
+    }
+
     public void updatePlan(UUID id, UpdatePlanRequestDto requestDto) throws PlanNotFoundException {
         Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findById(id);
 

@@ -23,4 +23,12 @@ public class ControllerAdvices {
                 HttpStatus.NOT_FOUND
         );
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ExceptionDto> handleUserAlreadyExistsException(UserAlreadyExistsException userAlreadyExistsException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.CONFLICT.value(), userAlreadyExistsException.getMessage()),
+                HttpStatus.CONFLICT
+        );
+    }
 }
