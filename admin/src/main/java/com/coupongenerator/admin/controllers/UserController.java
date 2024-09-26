@@ -56,4 +56,13 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(
+            @PathVariable UUID id
+    ) throws UserNotFoundException {
+        userService.deleteUser(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+    }
 }

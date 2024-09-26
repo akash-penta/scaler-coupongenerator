@@ -126,4 +126,14 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    public void deleteUser(UUID id) throws UserNotFoundException {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isEmpty()) {
+            throw new UserNotFoundException("User not found with id: " + id);
+        }
+
+        userRepository.deleteById(id);
+    }
 }
