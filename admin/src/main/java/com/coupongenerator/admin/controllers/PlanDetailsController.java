@@ -1,8 +1,9 @@
 package com.coupongenerator.admin.controllers;
 
-import com.coupongenerator.admin.dtos.PlanRequestDto;
+import com.coupongenerator.admin.dtos.CreatePlanRequestDto;
 import com.coupongenerator.admin.dtos.ExceptionDto;
 import com.coupongenerator.admin.dtos.PlanResponseDto;
+import com.coupongenerator.admin.dtos.UpdatePlanRequestDto;
 import com.coupongenerator.admin.exceptions.PlanAlreadyExistsException;
 import com.coupongenerator.admin.exceptions.PlanNotFoundException;
 import com.coupongenerator.admin.services.PlanDetailsService;
@@ -25,7 +26,7 @@ public class PlanDetailsController {
 
     @PostMapping
     public ResponseEntity<?> createPlan(
-            @Valid @RequestBody PlanRequestDto requestDto,
+            @Valid @RequestBody CreatePlanRequestDto requestDto,
             BindingResult bindingResult
     ) throws PlanAlreadyExistsException {
         if(bindingResult.hasErrors()) {
@@ -91,7 +92,7 @@ public class PlanDetailsController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePlan(
             @PathVariable String id,
-            @Valid @RequestBody PlanRequestDto requestDto,
+            @Valid @RequestBody UpdatePlanRequestDto requestDto,
             BindingResult bindingResult
     ) throws PlanNotFoundException, PlanAlreadyExistsException {
         if(id.isBlank()) {
@@ -109,34 +110,12 @@ public class PlanDetailsController {
         }
 
         if(bindingResult.hasErrors()) {
-            Set<String> errorSet = new HashSet<>();
             Map<String, String> errorMap = new HashMap<>();
 
             bindingResult.getAllErrors().forEach(objectError -> {
                 FieldError fieldError = (FieldError) objectError;
-                errorSet.add(fieldError.getDefaultMessage());
+                errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
             });
-
-            if(errorSet.contains("Plan name is mandatory")) {
-                errorMap.put("planName", "Plan name is mandatory");
-            }
-            else if(errorSet.contains("Plan name should not be blank")) {
-                errorMap.put("planName", "Plan name should not be blank");
-            }
-
-            if(errorSet.contains("Amount is mandatory")) {
-                errorMap.put("amount", "Amount is mandatory");
-            }
-            else if(errorSet.contains("Amount minimum should be 0")) {
-                errorMap.put("amount", "Amount minimum should be 0");
-            }
-
-            if(errorSet.contains("Month is mandatory")) {
-                errorMap.put("months", "Month is mandatory");
-            }
-            else if(errorSet.contains("Months minimum should be 1")) {
-                errorMap.put("months", "Months minimum should be 1");
-            }
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new ExceptionDto(HttpStatus.BAD_REQUEST.value(), errorMap)
