@@ -1,8 +1,7 @@
 package com.coupongenerator.admin.services;
 
-import com.coupongenerator.admin.dtos.CreatePlanRequestDto;
+import com.coupongenerator.admin.dtos.PlanRequestDto;
 import com.coupongenerator.admin.dtos.PlanResponseDto;
-import com.coupongenerator.admin.dtos.UpdatePlanRequestDto;
 import com.coupongenerator.admin.entities.PlanDetails;
 import com.coupongenerator.admin.exceptions.PlanAlreadyExistsException;
 import com.coupongenerator.admin.exceptions.PlanNotFoundException;
@@ -18,7 +17,7 @@ public class PlanDetailsService {
     @Autowired
     private PlanDetailsRepository planDetailsRepository;
 
-    public PlanResponseDto createPlan(CreatePlanRequestDto requestDto) throws PlanAlreadyExistsException {
+    public PlanResponseDto createPlan(PlanRequestDto requestDto) throws PlanAlreadyExistsException {
         Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findByPlanName(requestDto.getPlanName());
 
         if(optionalPlanDetails.isPresent()) {
@@ -73,7 +72,7 @@ public class PlanDetailsService {
         return optionalPlanDetails.get();
     }
 
-    public void updatePlan(UUID id, UpdatePlanRequestDto requestDto) throws PlanNotFoundException {
+    public void updatePlan(UUID id, PlanRequestDto requestDto) throws PlanNotFoundException, PlanAlreadyExistsException {
         Optional<PlanDetails> optionalPlanDetails = planDetailsRepository.findById(id);
 
         if(optionalPlanDetails.isEmpty()) {
@@ -83,6 +82,12 @@ public class PlanDetailsService {
         PlanDetails planDetails = optionalPlanDetails.get();
 
         if(requestDto.getPlanName() != null && !requestDto.getPlanName().isEmpty()) {
+            optionalPlanDetails = planDetailsRepository.findByPlanName(requestDto.getPlanName());
+
+            if(optionalPlanDetails.isPresent() && !optionalPlanDetails.get().getPlanName().equalsIgnoreCase(planDetails.getPlanName())) {
+                throw new PlanAlreadyExistsException("Plan already exist with same plan name");
+            }
+
             planDetails.setPlanName(requestDto.getPlanName());
         }
 
