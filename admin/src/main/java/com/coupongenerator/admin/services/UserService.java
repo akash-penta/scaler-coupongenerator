@@ -11,6 +11,7 @@ import com.coupongenerator.admin.exceptions.UserAlreadyExistsException;
 import com.coupongenerator.admin.exceptions.UserNotFoundException;
 import com.coupongenerator.admin.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,6 +24,9 @@ public class UserService {
 
     @Autowired
     private PlanDetailsService planDetailsService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserResponseDto createUser(
             CreateUserRequestDto requestDto
@@ -37,7 +41,7 @@ public class UserService {
 
         user.setUserName(requestDto.getUserName());
         user.setBusinessName(requestDto.getBusinessName());
-        user.setPassword(requestDto.getPassword());
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setStatus(UserStatus.ACTIVE);
 
         PlanDetails planDetails = planDetailsService.getPlanDetailsObject(requestDto.getPlanName());
