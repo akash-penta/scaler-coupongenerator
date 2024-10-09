@@ -1,5 +1,6 @@
 package com.coupongenerator.user.entities;
 
+import com.coupongenerator.user.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,13 +26,16 @@ public class User extends BaseModel implements UserDetails {
     @Column(nullable = false)
     private String businessName;
 
-    private com.coupongenerator.user.enums.UserStatus status;
+    private UserStatus status;
 
     private Date expireDate;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "plan")
     private PlanDetails currentPlan;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "createdBy", fetch = FetchType.LAZY)
+    private List<CouponTemplate> couponTemplates;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
