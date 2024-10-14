@@ -4,6 +4,7 @@ import com.coupongenerator.user.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,4 +47,5 @@ public class User extends BaseModel implements UserDetails {
     public String getUsername() {
         return this.userName;
     }
+
 }
