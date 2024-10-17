@@ -4,6 +4,8 @@ import com.coupongenerator.user.authservices.JwtService;
 import com.coupongenerator.user.dtos.LoginResponseDto;
 import com.coupongenerator.user.dtos.LoginRequestDto;
 import com.coupongenerator.user.entities.User;
+import com.coupongenerator.user.exceptions.UnauthorizedOperation;
+import com.coupongenerator.user.exceptions.UserNotFoundException;
 import com.coupongenerator.user.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(
             @RequestBody LoginRequestDto requestDto
-    ) {
+    ) throws UserNotFoundException, UnauthorizedOperation {
         User authenticatedUser = authenticationService.authenticate(requestDto);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
