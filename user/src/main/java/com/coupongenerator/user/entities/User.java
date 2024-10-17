@@ -27,6 +27,7 @@ public class User extends BaseModel implements UserDetails {
     @Column(nullable = false)
     private String businessName;
 
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     private Date expireDate;

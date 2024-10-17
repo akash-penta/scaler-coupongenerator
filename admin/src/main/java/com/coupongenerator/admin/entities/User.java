@@ -22,6 +22,7 @@ public class User extends BaseModel {
     @Column(nullable = false)
     private String businessName;
 
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     private Date expireDate;
