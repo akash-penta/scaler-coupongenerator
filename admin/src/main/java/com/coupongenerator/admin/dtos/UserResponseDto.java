@@ -25,7 +25,7 @@ public class UserResponseDto {
 
     private String businessName;
 
-    private UserStatus status;
+    private String status;
 
     private Date expireDate;
 
@@ -38,7 +38,7 @@ public class UserResponseDto {
                 user.getModifiedAt(),
                 user.getUserName(),
                 user.getBusinessName(),
-                user.getStatus(),
+                user.getStatus().name(),
                 user.getExpireDate(),
                 user.getCurrentPlan()
         );
