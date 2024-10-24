@@ -60,7 +60,7 @@ public class AuthenticationService {
         if(currentDate.after(user.getExpireDate())) {
             user.setStatus(UserStatus.EXPIRED);
             userRepository.save(user);
-            throw new UnauthorizedOperation("Your account got expired, Please recharge..!");
+            throw new UnauthorizedOperation("Your account got expired, Please contact admin to recharge..!");
         }
 
         return user;
