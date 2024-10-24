@@ -1,6 +1,7 @@
 package com.coupongenerator.user.services;
 
 import com.coupongenerator.user.dtos.LoginRequestDto;
+import com.coupongenerator.user.entities.PlanDetails;
 import com.coupongenerator.user.entities.User;
 import com.coupongenerator.user.enums.UserStatus;
 import com.coupongenerator.user.exceptions.UnauthorizedOperation;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
@@ -58,6 +60,21 @@ public class AuthenticationService {
         Date currentDate = new Date();
 
         if(currentDate.after(user.getExpireDate())) {
+            PlanDetails nextPlan = user.getNextPlan();
+            if(nextPlan != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(currentDate);
+                calendar.add(Calendar.MONTH, nextPlan.getMonths());
+                Date newExpireDate = calendar.getTime();
+                if(currentDate.before(newExpireDate)) {
+                    user.setStatus(UserStatus.ACTIVE);
+                    user.setExpireDate(newExpireDate);
+                    user.setCurrentPlan(nextPlan);
+                    user.setNextPlan(null);
+                    userRepository.save(user);
+                    return user;
+                }
+            }
             user.setStatus(UserStatus.EXPIRED);
             userRepository.save(user);
             throw new UnauthorizedOperation("Your account got expired, Please contact admin to recharge..!");

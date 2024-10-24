@@ -16,6 +16,14 @@ public class ControllerAdvices {
         );
     }
 
+    @ExceptionHandler(PlanNotFoundException.class)
+    public ResponseEntity<ExceptionDto> handlePlanNotFoundException(PlanNotFoundException planNotFoundException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.NOT_FOUND.value(), planNotFoundException.getMessage()),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
     @ExceptionHandler(CouponTemplateAlreadyExistsException.class)
     public ResponseEntity<ExceptionDto> handleCouponTemplateAlreadyExistsException(CouponTemplateAlreadyExistsException couponTemplateAlreadyExistsException) {
         return new ResponseEntity<>(

@@ -36,6 +36,10 @@ public class User extends BaseModel implements UserDetails {
     @JoinColumn(name = "plan")
     private PlanDetails currentPlan;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "plan")
+    private PlanDetails nextPlan;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<CouponTemplate> couponTemplates;
 
