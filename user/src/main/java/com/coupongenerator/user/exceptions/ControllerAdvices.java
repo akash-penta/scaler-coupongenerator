@@ -32,6 +32,38 @@ public class ControllerAdvices {
         );
     }
 
+    @ExceptionHandler(CouldNotCreateCouponException.class)
+    public ResponseEntity<ExceptionDto> handleCouldNotCreateCouponException(CouldNotCreateCouponException couldNotCreateCouponException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.BAD_REQUEST.value(), couldNotCreateCouponException.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(CouldNotUpdateCouponException.class)
+    public ResponseEntity<ExceptionDto> handleCouldNotUpdateCouponException(CouldNotUpdateCouponException couldNotUpdateCouponException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.BAD_REQUEST.value(), couldNotUpdateCouponException.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(CouponNotFoundException.class)
+    public ResponseEntity<ExceptionDto> handleCouponNotFoundException(CouponNotFoundException couponNotFoundException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.NOT_FOUND.value(), couponNotFoundException.getMessage()),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<ExceptionDto> handleCustomerNotFoundException(CustomerNotFoundException customerNotFoundException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.NOT_FOUND.value(), customerNotFoundException.getMessage()),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
     @ExceptionHandler(UnauthorizedOperation.class)
     public ResponseEntity<ExceptionDto> handleUnauthorizedOperation(UnauthorizedOperation unauthorizedOperation) {
         return new ResponseEntity<>(

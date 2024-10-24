@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/coupon/template")
+@RequestMapping("/couponTemplate")
 public class CouponTemplateController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class CouponTemplateController {
     @PostMapping
     public ResponseEntity<?> createCouponTemplate(
             @RequestBody CreateCouponTemplateRequestDto requestDto
-        ) throws UserNotFoundException, CouponTemplateAlreadyExistsException {
+        ) throws UserNotFoundException, CouponTemplateAlreadyExistsException, UnauthorizedOperation {
         User currentUser = authenticationService.getCurrentUser();
 
         CouponTemplateResponseDto responseDto = couponTemplateService.createCouponTemplate(
@@ -45,7 +45,7 @@ public class CouponTemplateController {
     @GetMapping("/{couponTemplateName}")
     public ResponseEntity<?> getCouponTemplateByName(
             @PathVariable String couponTemplateName
-    ) throws UserNotFoundException, CouponTemplateNotFoundException {
+    ) throws UserNotFoundException, CouponTemplateNotFoundException, UnauthorizedOperation {
         User currentUser = authenticationService.getCurrentUser();
 
         CouponTemplateResponseDto responseDto = couponTemplateService.getCouponTemplateByName(
@@ -57,7 +57,7 @@ public class CouponTemplateController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllCouponsTemplates() throws UserNotFoundException {
+    public ResponseEntity<?> getAllCouponsTemplates() throws UserNotFoundException, UnauthorizedOperation {
         User currentUser = authenticationService.getCurrentUser();
 
         List<CouponTemplateResponseDto> responseDtoList = couponTemplateService.getAllCouponsTemplates(currentUser);

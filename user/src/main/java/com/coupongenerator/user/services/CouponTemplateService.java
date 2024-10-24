@@ -45,8 +45,6 @@ public class CouponTemplateService {
         return CouponTemplateResponseDto.from(couponTemplate);
     }
 
-
-
     public CouponTemplateResponseDto getCouponTemplateByName(User currentUser, String couponTemplateName) throws CouponTemplateNotFoundException {
         Optional<CouponTemplate> optionalCouponTemplate = couponTemplateRepository.findByNameAndCreatedBy(
                 couponTemplateName, currentUser
@@ -57,6 +55,18 @@ public class CouponTemplateService {
         }
 
         return CouponTemplateResponseDto.from(optionalCouponTemplate.get());
+    }
+
+    public CouponTemplate getCouponTemplateByNameObject(User currentUser, String couponTemplateName) throws CouponTemplateNotFoundException {
+        Optional<CouponTemplate> optionalCouponTemplate = couponTemplateRepository.findByNameAndCreatedBy(
+                couponTemplateName, currentUser
+        );
+
+        if(optionalCouponTemplate.isEmpty()) {
+            throw new CouponTemplateNotFoundException("Coupon template not found with name: " + couponTemplateName);
+        }
+
+        return optionalCouponTemplate.get();
     }
 
     public List<CouponTemplateResponseDto> getAllCouponsTemplates(User currentUser) {
@@ -105,6 +115,9 @@ public class CouponTemplateService {
         if(requestDto.getAmount() != null) {
             couponTemplate.setAmount(requestDto.getAmount());
         }
+
+        Date currentDate = new Date();
+        couponTemplate.setModifiedAt(currentDate);
 
         couponTemplateRepository.save(couponTemplate);
     }
