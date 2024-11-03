@@ -129,28 +129,11 @@ public class CouponTemplateController {
                 errorSet.add(fieldError.getDefaultMessage());
             });
 
-            if(errorSet.contains("Name is mandatory")) {
-                errorMap.put("name", "Name is mandatory");
-            }
-            else if(errorSet.contains("Name should not be blank")) {
-                errorMap.put("name", "Name should not be blank");
-            }
-
-            if(errorSet.contains("Start Date is mandatory")) {
-                errorMap.put("startDate", "Start Date is mandatory");
-            }
-
-            if(errorSet.contains("End Date is mandatory")) {
-                errorMap.put("endDate", "End Date is mandatory");
-            }
-            else if(errorSet.contains("End date should be future")) {
+            if(errorSet.contains("End date should be future")) {
                 errorMap.put("endDate", "End date should be future");
             }
 
-            if(errorSet.contains("Amount is mandatory")) {
-                errorMap.put("amount", "Amount is mandatory");
-            }
-            else if(errorSet.contains("Amount should be greater then 0")) {
+            if(errorSet.contains("Amount should be greater then 0")) {
                 errorMap.put("amount", "Amount should be greater then 0");
             }
 
