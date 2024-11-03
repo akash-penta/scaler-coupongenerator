@@ -33,11 +33,11 @@ public class User extends BaseModel implements UserDetails {
     private Date expireDate;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "plan")
+    @JoinColumn(name = "currentPlan")
     private PlanDetails currentPlan;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "plan", insertable=false, updatable=false)
+    @JoinColumn(name = "nextPlan")
     private PlanDetails nextPlan;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "createdBy", fetch = FetchType.LAZY)

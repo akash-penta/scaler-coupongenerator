@@ -28,6 +28,6 @@ public class User extends BaseModel {
     private Date expireDate;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "plan")
+    @JoinColumn(name = "currentPlan")
     private PlanDetails currentPlan;
 }
