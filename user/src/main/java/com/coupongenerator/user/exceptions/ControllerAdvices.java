@@ -72,6 +72,14 @@ public class ControllerAdvices {
         );
     }
 
+    @ExceptionHandler(CantCreateNewPaymentLinkException.class)
+    public ResponseEntity<ExceptionDto> handleCantCreateNewPaymentLinkException(CantCreateNewPaymentLinkException cantCreateNewPaymentLinkException) {
+        return new ResponseEntity<>(
+                new ExceptionDto(HttpStatus.CONFLICT.value(), cantCreateNewPaymentLinkException.getMessage()),
+                HttpStatus.CONFLICT
+        );
+    }
+
     @ExceptionHandler(UnauthorizedOperation.class)
     public ResponseEntity<ExceptionDto> handleUnauthorizedOperation(UnauthorizedOperation unauthorizedOperation) {
         return new ResponseEntity<>(
