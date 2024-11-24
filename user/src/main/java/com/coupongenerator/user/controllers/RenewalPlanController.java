@@ -39,7 +39,7 @@ public class RenewalPlanController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
     }
 
-    @PostMapping("/getPaymentLink/{planName}")
+    @PostMapping("/getPaymentId/{planName}")
     public ResponseEntity<?> getPaymentLint(
             @PathVariable String planName
     ) throws UserNotFoundException, UnauthorizedOperation, CantCreateNewPaymentLinkException, PlanNotFoundException {
@@ -60,7 +60,7 @@ public class RenewalPlanController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/getPaymentLink")
+    @GetMapping("/getPaymentId")
     public ResponseEntity<?> getExistingPaymentLink() throws UserNotFoundException, UnauthorizedOperation {
         User currentUser = authenticationService.getCurrentUser();
 
