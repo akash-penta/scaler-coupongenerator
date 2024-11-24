@@ -1,6 +1,7 @@
 package com.coupongenerator.user.controllers;
 
 import com.coupongenerator.user.dtos.ExceptionDto;
+import com.coupongenerator.user.dtos.PaymentIdResponseDto;
 import com.coupongenerator.user.dtos.PlanResponseDto;
 import com.coupongenerator.user.entities.User;
 import com.coupongenerator.user.exceptions.CantCreateNewPaymentLinkException;
@@ -54,21 +55,21 @@ public class RenewalPlanController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDto(409, "Already next plan exists, try after " + currentUser.getExpireDate().toString()));
         }
 
-        String paymentLink = renewalPlanService.getPaymentLink(currentUser, planName);
+        PaymentIdResponseDto responseDto = renewalPlanService.getPaymentId(currentUser, planName);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentLink);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("/getPaymentLink")
     public ResponseEntity<?> getExistingPaymentLink() throws UserNotFoundException, UnauthorizedOperation {
         User currentUser = authenticationService.getCurrentUser();
 
-        String paymentLink = renewalPlanService.getExistingPaymentLink(currentUser);
+        PaymentIdResponseDto responseDto = renewalPlanService.getExistingPaymentId(currentUser);
 
-        if(paymentLink == null) {
+        if(responseDto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDto(HttpStatus.NOT_FOUND.value(), "No active initiated payment link"));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(paymentLink);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }

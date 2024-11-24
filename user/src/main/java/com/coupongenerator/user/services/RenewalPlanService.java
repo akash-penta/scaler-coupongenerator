@@ -1,5 +1,8 @@
 package com.coupongenerator.user.services;
 
+import com.coupongenerator.user.dtos.PaymentIdResponseDto;
+import com.coupongenerator.user.dtos.PlanDetailsDto;
+import com.coupongenerator.user.dtos.UserDto;
 import com.coupongenerator.user.entities.PaymentDetails;
 import com.coupongenerator.user.entities.PlanDetails;
 import com.coupongenerator.user.entities.User;
@@ -29,11 +32,8 @@ public class RenewalPlanService {
     @Autowired
     private UserRepository userRepository;
 
-    @Value("${payment.server.link}")
-    private String paymentUrl;
-
     @Transactional
-    public String getPaymentLink(User currentUser, String planName) throws PlanNotFoundException, CantCreateNewPaymentLinkException {
+    public PaymentIdResponseDto getPaymentId(User currentUser, String planName) throws PlanNotFoundException, CantCreateNewPaymentLinkException {
         Optional<PaymentDetails> optionalPaymentDetails = paymentDetailsRepository.findByUserAndPaymentStatus(currentUser, PaymentStatus.INITIATED);
         if(optionalPaymentDetails.isPresent()) {
             throw new CantCreateNewPaymentLinkException("Payment link already exists");
@@ -55,14 +55,22 @@ public class RenewalPlanService {
         paymentDetails.setModifiedAt(currentDate);
         paymentDetailsRepository.save(paymentDetails);
 
-        return paymentUrl + paymentDetails.getId();
+        return PaymentIdResponseDto.builder()
+                .paymentId(paymentDetails.getId().toString())
+                .user(UserDto.from(currentUser))
+                .planDetails(PlanDetailsDto.from(planDetails))
+                .build();
     }
 
-    public String getExistingPaymentLink(User currentUser) {
+    public PaymentIdResponseDto getExistingPaymentId(User currentUser) {
         Optional<PaymentDetails> optionalPaymentDetails = paymentDetailsRepository.findByUserAndPaymentStatus(currentUser, PaymentStatus.INITIATED);
         if(optionalPaymentDetails.isPresent()) {
             PaymentDetails paymentDetails = optionalPaymentDetails.get();
-            return paymentUrl + paymentDetails.getId();
+            return PaymentIdResponseDto.builder()
+                    .paymentId(paymentDetails.getId().toString())
+                    .user(UserDto.from(currentUser))
+                    .planDetails(PlanDetailsDto.from(paymentDetails.getPlanDetails()))
+                    .build();
         }
 
         return null;
