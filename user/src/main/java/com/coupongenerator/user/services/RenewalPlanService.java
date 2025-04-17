@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +35,7 @@ public class RenewalPlanService {
 
     @Transactional
     public PaymentIdResponseDto getPaymentId(User currentUser, String planName) throws PlanNotFoundException, CantCreateNewPaymentLinkException {
-        Optional<PaymentDetails> optionalPaymentDetails = paymentDetailsRepository.findByUserAndPaymentStatus(currentUser, PaymentStatus.INITIATED);
+        Optional<PaymentDetails> optionalPaymentDetails = paymentDetailsRepository.findByUserAndPaymentStatusIn(currentUser, List.of(PaymentStatus.INITIATED, PaymentStatus.GENERATEDLINK));
         if(optionalPaymentDetails.isPresent()) {
             throw new CantCreateNewPaymentLinkException("Payment link already exists");
         }
@@ -59,17 +60,19 @@ public class RenewalPlanService {
                 .paymentId(paymentDetails.getId().toString())
                 .user(UserDto.from(currentUser))
                 .planDetails(PlanDetailsDto.from(planDetails))
+                .paymentStatus(paymentDetails.getPaymentStatus().toString())
                 .build();
     }
 
     public PaymentIdResponseDto getExistingPaymentId(User currentUser) {
-        Optional<PaymentDetails> optionalPaymentDetails = paymentDetailsRepository.findByUserAndPaymentStatus(currentUser, PaymentStatus.INITIATED);
+        Optional<PaymentDetails> optionalPaymentDetails = paymentDetailsRepository.findByUserAndPaymentStatusIn(currentUser, List.of(PaymentStatus.INITIATED, PaymentStatus.GENERATEDLINK));
         if(optionalPaymentDetails.isPresent()) {
             PaymentDetails paymentDetails = optionalPaymentDetails.get();
             return PaymentIdResponseDto.builder()
                     .paymentId(paymentDetails.getId().toString())
                     .user(UserDto.from(currentUser))
                     .planDetails(PlanDetailsDto.from(paymentDetails.getPlanDetails()))
+                    .paymentStatus(paymentDetails.getPaymentStatus().toString())
                     .build();
         }
 

@@ -13,4 +13,5 @@ public class PaymentIdResponseDto {
     private String paymentId;
     private UserDto user;
     private PlanDetailsDto planDetails;
+    private String paymentStatus;
 }
